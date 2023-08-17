@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Professional Deal Management</title>
+</head>
+<body>
+  <h1>Professional Deal Management</h1>
+
+  <form id="dealForm">
+    <label for="vendor">Vendor:</label>
+    <input type="text" id="vendor" required><br>
+
+    <label for="amount">Deal Amount:</label>
+    <input type="number" id="amount" required><br>
+
+    <label for="description">Deal Description:</label>
+    <textarea id="description" required></textarea><br>
+
+    <button type="submit">Add Deal</button>
+  </form>
+
+  <table id="dealsTable">
+    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Deal Amount</th>
+        <th>Deal Description</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <h2>Team Expenses: <span id="expenses">0</span></h2>
+  <h2>Annual Budget: <span id="budget">0</span></h2>
+
+  <script>
+    // Get references to the form, table, and expense/budget elements
+    const dealForm = document.getElementById('dealForm');
+    const dealsTable = document.getElementById('dealsTable');
+    const expenses = document.getElementById('expenses');
+    const budget = document.getElementById('budget');
+
+    // Initialize an array to store the deals
+    const deals = [];
+
+    // Function to add a new deal
+    function addDeal(event) {
+      event.preventDefault();
+
+      // Get the values from the form inputs
+      const vendor = document.getElementById('vendor').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const description = document.getElementById('description').value;
+
+      // Create a new deal object
+      const deal = { vendor, amount, description };
+
+      // Add the deal to the array and update the table
+      deals.push(deal);
+      updateTable();
+
+      // Clear the form inputs
+      dealForm.reset();
+    }
+
+    // Function to update the table with the current deals
+    function updateTable() {
+      // Clear the table body
+      dealsTable.getElementsByTagName('tbody')[0].innerHTML = '';
+
+      // Iterate over the deals and add rows to the table
+      deals.forEach((deal) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${deal.vendor}</td>
+          <td>${deal.amount}</td>
+          <td>${deal.description}</td>
+        `;
+        dealsTable.getElementsByTagName('tbody')[0].appendChild(row);
+      });
+
+      // Update the team expenses and annual budget
+      const totalExpenses = deals.reduce((acc, deal) => acc + deal.amount, 0);
+      expenses.textContent = totalExpenses;
+      budget.textContent = totalExpenses * 12;
+    }
+
+    // Add an event listener to the form submit event
+    dealForm.addEventListener('submit', addDeal);
+  </script>
+</body>
+</html>
